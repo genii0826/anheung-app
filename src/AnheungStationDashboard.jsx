@@ -21,10 +21,21 @@ const REFRESH_SEC = 60;
 const FCST_REFRESH_SEC = 600; // 단기예보는 1~3시간 간격 발표라 10분마다면 충분
 
 const COL = {
-  bg0: "#0D1A1F", bg1: "#112329", panel: "#16292F", panelHi: "#1B333A",
-  line: "#26424A", lineSoft: "#1E3840", text: "#E9F1EE", mut: "#7C99A0", mut2: "#5C787F",
-  heat: "#EE9F5C", heatSoft: "#3A2A20", raw: "#6C8A91", aqua: "#5FB6C9", sage: "#9FBBA9",
-  thi: ["#57A97C", "#E3B457", "#DF8548", "#D25A5A"],
+  bg0: "#F4F7FA",
+  bg1: "#EBF0F5",
+  panel: "#FFFFFF",
+  panelHi: "#F9FAFC",
+  line: "#DCE1E6",
+  lineSoft: "#EDF1F5",
+  text: "#222222",
+  mut: "#666666",
+  mut2: "#999999",
+  heat: "#E83428",
+  heatSoft: "#FDECEA",
+  raw: "#505A64",
+  aqua: "#1152A2",
+  sage: "#279447",
+  thi: ["#32A1FF", "#00C73C", "#FF9900", "#E83428"],
 };
 
 // ---- 태양 기하 ----
