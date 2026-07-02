@@ -21,21 +21,26 @@ const REFRESH_SEC = 60;
 const FCST_REFRESH_SEC = 600; // 단기예보는 1~3시간 간격 발표라 10분마다면 충분
 
 const COL = {
-  bg0: "#F4F7FA",
-  bg1: "#EBF0F5",
-  panel: "#FFFFFF",
-  panelHi: "#F9FAFC",
-  line: "#DCE1E6",
-  lineSoft: "#EDF1F5",
-  text: "#222222",
-  mut: "#666666",
-  mut2: "#999999",
-  heat: "#E83428",
-  heatSoft: "#FDECEA",
-  raw: "#505A64",
-  aqua: "#1152A2",
-  sage: "#279447",
-  thi: ["#32A1FF", "#00C73C", "#FF9900", "#E83428"],
+  bg0: "#E2E8F0",      // 전체 배경 (살짝 무게감 있는 회색으로 흰색 카드와 명확한 대비)
+  bg1: "#F8FAFC",      // 화면 중앙부 배경 (밝고 시원한 느낌)
+  panel: "#FFFFFF",    // 카드 배경 (완전 흰색으로 텍스트를 가장 돋보이게 함)
+  panelHi: "#F1F5F9",  // 버튼 및 표 헤더 배경 (구분감 추가)
+  line: "#CBD5E1",     // 뚜렷한 테두리 및 구분선
+  lineSoft: "#E2E8F0", // 내부 연한 구분선
+  text: "#0F172A",     // 메인 텍스트 (거의 검은색에 가까운 네이비, 가독성 최상)
+  mut: "#475569",      // 보조 텍스트 (기존보다 훨씬 진하게 높여 또렷하게 보임)
+  mut2: "#64748B",     // 가장 작은 텍스트/차트 축 (충분히 읽히는 진한 회색)
+  heat: "#DC2626",     // 보정기온 (기상청 특유의 시인성 높은 빨강)
+  heatSoft: "#FEE2E2", // 온도 배경 효과 (아주 연한 빨강)
+  raw: "#334155",      // 원시 데이터 (차분하고 진한 슬레이트 톤)
+  aqua: "#0284C7",     // 습도/메인 컬러 (기상청 스타일의 선명한 파랑)
+  sage: "#16A34A",     // 풍속/강수 (안정적이고 뚜렷한 녹색)
+  thi: [
+    "#0284C7", // 0: 낮음 (파랑)
+    "#16A34A", // 1: 보통 (초록)
+    "#EA580C", // 2: 높음 (주황 - 노랑은 배경에 묻히므로 주황으로 대체)
+    "#DC2626", // 3: 매우 높음 (빨강)
+  ],
 };
 
 // ---- 태양 기하 ----
@@ -247,15 +252,11 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    fetchLive();
-    timer.current = setInterval(fetchLive, REFRESH_SEC * 1000);
-    return () => timer.current && clearInterval(timer.current);
+  fetchLive();
   }, [fetchLive]);
 
   useEffect(() => {
-    fetchForecast();
-    fcstTimer.current = setInterval(fetchForecast, FCST_REFRESH_SEC * 1000);
-    return () => fcstTimer.current && clearInterval(fcstTimer.current);
+  fetchForecast();
   }, [fetchForecast]);
 
   const series = useMemo(() => correctSeries(rows).filter((r) => r.valid), [rows]);
@@ -268,9 +269,9 @@ export default function App() {
     <div style={{ minHeight: "100%", background: `radial-gradient(1200px 600px at 78% -8%, ${COL.bg1}, ${COL.bg0} 62%)`, color: COL.text, fontFamily: "'IBM Plex Sans KR', system-ui, sans-serif" }}>
       <style>{`
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
-        
-        .mono{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+
+        .mono{font-variant-numeric:tabular-nums}
         .card{background:${COL.panel};border:1px solid ${COL.line};border-radius:16px}
         .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:10.5px;font-weight:600;color:${COL.mut}}
         .btn{border:1px solid ${COL.line};background:${COL.panelHi};color:${COL.text};border-radius:10px;cursor:pointer;transition:.15s}
@@ -453,7 +454,7 @@ function Methodology({ cur }) {
       </Sec>
 
       <Sec n="02" title="보정기온 — 회귀식 (Model D)">
-        <F>T̂ = 0.2125 + 1.0224·Ta + 6.2558·S_eff(t−1h) − 0.2027·U − 0.5365·R</F>
+        <F>{String.raw`\hat{T} = 0.2125 + 1.0224 \cdot T_a + 6.2558 \cdot S_{\text{eff}}(t-1\text{h}) - 0.2027 \cdot U - 0.5365 \cdot R`}</F>
         <Tbl rows={[
           ["Ta", "AWS 기온 (°C)", "기준 기온"],
           ["S_eff(t−1h)", "직전 1시간 실효일사(아래 03)", "80cm 근지표 초단열 + 간이백엽상 일사 가열, 오후 열지연 반영"],
@@ -464,8 +465,8 @@ function Methodology({ cur }) {
       </Sec>
 
       <Sec n="03" title="실효일사 지수 S_eff 와 청천일사 S0">
-        <F>S_eff = S0 · (100 − RH) / 100</F>
-        <F>S0 = max(0, cos θz),  cos θz = sinφ·sinδ + cosφ·cosδ·cos h</F>
+        <F>{String.raw`S_{\text{eff}} = S_0 \cdot \frac{100 - \text{RH}}{100}`}</F>
+        <F>{String.raw`S_0 = \max(0, \cos \theta_z), \quad \cos \theta_z = \sin \varphi \cdot \sin \delta + \cos \varphi \cdot \cos \delta \cdot \cos h`}</F>
         <ul style={ulS}>
           <li>φ = 위도. δ = 태양 적위, h = 시간각 — Spencer/NOAA 근사식(적위·균시차 포함).</li>
           <li>시간각은 진태양시(TST) = 시각(분) + 균시차 + 4·(경도 − 135°). KST 벽시계 기준.</li>
@@ -476,9 +477,9 @@ function Methodology({ cur }) {
 
       <Sec n="04" title="불쾌지수 (Thom THI)">
         <p style={{ ...pS, marginTop: 0 }}>섭씨형(RH 단위 %):</p>
-        <F>THI = 0.81·T + 0.01·RH·(0.99·T − 14.3) + 46.3</F>
+        <F>{String.raw`\text{THI} = 0.81 \cdot T + 0.01 \cdot \text{RH} \cdot (0.99 \cdot T - 14.3) + 46.3`}</F>
         <p style={pS}>화씨형(RH 단위 분율, 위 식과 대수적으로 동일):</p>
-        <F>THI = (9/5·T + 32) − 0.55·(1 − RH)·(9/5·T − 26)</F>
+        <F>{String.raw`\text{THI} = \left(\frac{9}{5} \cdot T + 32\right) - 0.55 \cdot (1 - \text{RH}) \cdot \left(\frac{9}{5} \cdot T - 26\right)`}</F>
         <ul style={ulS}>
           <li>두 식은 완전히 같은 값을 줍니다. 단 화씨형은 <b>RH를 분율(0~1)</b>, 섭씨형은 <b>%</b>로 넣습니다.</li>
           <li>메인 화면의 큰 숫자는 입력 T에 <b>보정기온 T̂</b>를 사용한 값이고, 그 아래 작게 병기된 값은 입력 T에 <b>원시 AWS 기온</b>을 그대로 쓴 값(보정 미적용)입니다. RH는 두 경우 모두 AWS 습도를 사용합니다.</li>
@@ -567,8 +568,23 @@ function Sec({ n, title, children }) {
     </section>
   );
 }
+import { BlockMath } from "react-katex";
+import "katex/dist/katex.min.css";
 function F({ children }) {
-  return <div className="mono" style={{ background: COL.bg0, border: `1px solid ${COL.line}`, borderLeft: `3px solid ${COL.heat}`, borderRadius: 8, padding: "12px 14px", fontSize: 13.5, color: COL.text, margin: "8px 0", overflowX: "auto" }}>{children}</div>;
+  return (
+    <div style={{ 
+      background: COL.bg0, 
+      border: `1px solid ${COL.line}`, 
+      borderLeft: `3px solid ${COL.heat}`, 
+      borderRadius: 8, 
+      padding: "12px 14px", 
+      margin: "8px 0", 
+      overflowX: "auto" 
+    }}>
+      {/* 내부 텍스트를 LaTeX 수식으로 렌더링합니다 */}
+      <BlockMath math={children} />
+    </div>
+  );
 }
 function Tbl({ head, rows }) {
   return (
