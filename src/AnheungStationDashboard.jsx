@@ -182,8 +182,8 @@ function buildDemoForecast() {
     const p = (n) => String(n).padStart(2, "0");
     out.push({
       tm: `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(h)}:00`,
-      ta, hm: Math.max(35, hm), ws: 1.5 + Math.random(), re: null,
-      rn15: rainy ? 1 : 0, pty: rainy ? "1" : "0", pop: rainy ? 70 : 10,
+      ta: 99, hm: 99, ws: 99, re: null,
+      rn15: 99, pty: "99", pop: 99,
     });
   }
   return out;
@@ -280,7 +280,7 @@ export default function App() {
               민족사관고등학교 <span style={{ color: COL.mut, fontWeight: 400 }}>날씨</span>
             </h1>
             <div className="mono" style={{ fontSize: 12, color: COL.mut2 }}>
-              37.4646°N · 128.1551°E · 해발 530 m
+              안흥 AWS - 37.4646°N · 128.1551°E · 해발 530 m
             </div>
           </div>
           {page === "main" && (
@@ -328,7 +328,7 @@ function Dashboard({ series, cur, status, dot, loading, fcstSeries, fcstStatus }
           <div style={{ position: "absolute", inset: 0, background: `radial-gradient(420px 220px at 85% 0%, ${COL.heatSoft}, transparent 70%)`, pointerEvents: "none" }} />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative" }}>
             <div className="eyebrow" style={{ display: "flex", alignItems: "center", gap: 7 }}>
-              <Thermometer size={13} style={{ color: COL.heat }} /> 보정기온 · 현장 80 cm 상당
+              <Thermometer size={13} style={{ color: COL.heat }} /> 보정기온
             </div>
             <div className="mono" style={{ fontSize: 12, color: COL.mut2 }}>{cur.tm} KST</div>
           </div>
@@ -390,7 +390,7 @@ function Dashboard({ series, cur, status, dot, loading, fcstSeries, fcstStatus }
 
       <div className="card rise" style={{ padding: "18px 20px 8px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-          <div className="eyebrow">최근 추이 · 원시 vs 보정기온</div>
+          <div className="eyebrow">최근 추이</div>
           <div style={{ display: "flex", gap: 14, fontSize: 11.5 }}>
             <Legend c={COL.raw} t="원시 AWS" /><Legend c={COL.heat} t="보정" /><Legend c={band} t="불쾌지수" />
           </div>
