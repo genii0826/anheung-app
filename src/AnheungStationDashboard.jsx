@@ -595,14 +595,17 @@ function ForecastSection({ series, status }) {
           <thead>
             <tr style={{ borderBottom: `1px solid ${COL.line}` }}>
               {["예보시각", "보정기온", "기온(원본)", "불쾌지수(보정)", "불쾌지수(원본)", "강수형태"].map((h, i) => (
-                <th key={h} className="eyebrow" style={{ textAlign: i === 0 ? "left" : "right", padding: "6px 10px", whiteSpace: "nowrap" }}>{h}</th>
+                <th key={h} className="eyebrow" style={{ textAlign: i === 0 ? "left" : "right", padding: "6px 10px", whiteSpace: "nowrap", ...(i === 0 ? { position: "sticky", left: 0, background: COL.panel, zIndex: 2, boxShadow: `2px 0 4px -2px rgba(0,0,0,.4)` } : {}),}}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rows.map((r, i) => (
               <tr key={r.tm} style={{ borderBottom: i < rows.length - 1 ? `1px solid ${COL.lineSoft}` : "none" }}>
-                <td className="mono" style={{ padding: "7px 10px", fontSize: 12.5, color: COL.mut, whiteSpace: "nowrap" }}>
+                <td className="mono" style={{
+                  padding: "7px 10px", fontSize: 12.5, color: COL.mut, whiteSpace: "nowrap",
+                  position: "sticky", left: 0, background: COL.panel, zIndex: 1, boxShadow: `2px 0 4px -2px rgba(0,0,0,.4)`,
+                }}>
                   {r.tm.slice(5, 10)} {r.t}
                 </td>
                 <td className="mono" style={{ padding: "7px 10px", fontSize: 12.5, textAlign: "right", color: COL.heat, fontWeight: 600 }}>
