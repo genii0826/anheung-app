@@ -267,7 +267,9 @@ export default function App() {
   return (
     <div style={{ minHeight: "100%", background: `radial-gradient(1200px 600px at 78% -8%, ${COL.bg1}, ${COL.bg0} 62%)`, color: COL.text, fontFamily: "'IBM Plex Sans KR', system-ui, sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+        
         .mono{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
         .card{background:${COL.panel};border:1px solid ${COL.line};border-radius:16px}
         .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:10.5px;font-weight:600;color:${COL.mut}}
